@@ -218,8 +218,6 @@ void line_size(BenchmarkResult &bench) {
     std::map<int, int> m;
 
     for (int i = 0; i < LINE_SIZE_ITER; i++) {
-        int in = -1;
-
         double pre_time = -1;
 
         for (uint32_t line_size = 8; line_size <= bench.cache_size / bench.assoc; line_size *= 2) {
@@ -228,13 +226,12 @@ void line_size(BenchmarkResult &bench) {
             const double time = measure(spots);
 
             if (const double k = pre_time / time; k > LINE_SIZE_THR) {
-                in = line_size * sizeof(uint32_t);
+                m[line_size * sizeof(uint32_t)]++;
+                break;
             }
 
             pre_time = time;
         }
-
-        m[in]++;
     }
 
     int max = 0;
